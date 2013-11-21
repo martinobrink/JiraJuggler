@@ -6,17 +6,19 @@ using Android.Views;
 using Android.Widget;
 using Android.OS;
 using JiraJuggler.Shared;
+using Xamarin.ActionbarSherlockBinding.App;
 
 namespace JiraJuggler
 {
 	[Activity (Label = "JiraJuggler", MainLauncher = true)]
-	public class MainActivity : Activity
+	public class MainActivity : BaseActivity
 	{
 		int count = 1;
 
 		protected override void OnCreate (Bundle bundle)
 		{
 			base.OnCreate (bundle);
+			SetTitle (Resource.String.app_name);
 
 			// Set our view from the "main" layout resource
 			SetContentView (Resource.Layout.Main);

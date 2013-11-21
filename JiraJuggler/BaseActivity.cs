@@ -1,4 +1,5 @@
 using System;
+using Android;
 using Xamarin.ActionbarSherlockBinding.App;
 using Android.OS;
 using Xamarin.ActionbarSherlockBinding.Views;
@@ -9,7 +10,7 @@ namespace JiraJuggler
 	{
         protected override void OnCreate(Bundle savedInstanceState)
         {
-            SetTheme (Resource.Style.Sherlock___Theme_DarkActionBar);
+            SetTheme(Resource.Style.Sherlock___Theme_DarkActionBar);
             base.OnCreate(savedInstanceState);
         }
 

@@ -1,4 +1,5 @@
 using System;
+using Android;
 using Android.App;
 using Android.Content;
 using Android.Runtime;
@@ -27,12 +28,13 @@ namespace JiraJuggler
 
 			// Get our button from the layout resource,
 			// and attach an event to it
-			Button button = FindViewById<Button> (Resource.Id.myButton);
-			
-			button.Click += delegate {
-				//button.Text = string.Format ("{0} clicks!", 2*count++);
-				button.Text = new JiraClient().PerformRequest();
-			};
+            Button button = FindViewById<Button>(Resource.Id.myButton);
+
+            button.Click += delegate
+            {
+                //button.Text = string.Format ("{0} clicks!", 2*count++);
+                button.Text = new JiraClient().PerformRequest();
+            };
 		}
 	}
 }

@@ -29,7 +29,7 @@ namespace JiraJuggler
 			
 			button.Click += delegate {
 				//button.Text = string.Format ("{0} clicks!", 2*count++);
-				button.Text = new SharedHttpClient().PerformRequest();
+				button.Text = new JiraClient().PerformRequest();
 			};
 		}
 	}

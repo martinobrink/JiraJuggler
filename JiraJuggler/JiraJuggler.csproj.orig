@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -69,15 +69,16 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>
+<<<<<<< HEAD
     <ProjectReference Include="..\JiraJuggler.Shared\JiraJuggler.Shared.csproj">
       <Project>{3989C9D6-AC82-44B4-82D6-CC9EA636D040}</Project>
       <Name>JiraJuggler.Shared</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
+=======
     <XamarinComponentReference Include="XamarinActionBarSherlock">
       <Version>4.4.0</Version>
       <Visible>False</Visible>
     </XamarinComponentReference>
+>>>>>>> ActionbarSherlock added
   </ItemGroup>
 </Project>

@@ -11,7 +11,7 @@ namespace JiraJuggler.Shared
 
 		public string PerformRequest()
 		{
-			return _client.GetStringAsync("http://www.google.dk").Result;
+            return _client.GetStringAsync("https://jira.trifork.com/rest/api/2/project").Result;
 		}
 
         async public Task<HttpResponseMessage> UploadImage(string url, byte[] imageData, string fileName)

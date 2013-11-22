@@ -1,20 +1,33 @@
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using JiraJuggler.Shared.Model;
+using Newtonsoft.Json;
 
 namespace JiraJuggler.Shared
 {
 	public class JiraClient
 	{
-		private readonly HttpClient _client = new HttpClient();
+	    private readonly HttpClient _client;
 
-		public string PerformRequest()
-		{
-            return _client.GetStringAsync("https://jira.trifork.com/rest/api/2/project").Result;
-		}
+	    public JiraClient(string jiraBaseUrl, string userName, string password)
+	    {
+            _client = new HttpClient();
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(string.Format("{0}:{1}", userName, password))));
+	        _client.BaseAddress = new Uri(jiraBaseUrl + "/rest/api/2/");
+	    }
 
-        async public Task<HttpResponseMessage> UploadImage(string url, byte[] imageData, string fileName)
+        //TODO: make async
+        public List<ProjectData> GetProjects()
+        {
+            var projectsJson = _client.GetStringAsync("project").Result;
+            return JsonConvert.DeserializeObject<List<ProjectData>>(projectsJson);
+        }
+
+        //TODO: not tested yet
+        public async Task<HttpResponseMessage> UploadImage(string url, byte[] imageData, string fileName)
         {
             var requestContent = new MultipartFormDataContent();
             //    here you can specify boundary if you need---^

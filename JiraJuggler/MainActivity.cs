@@ -1,48 +1,53 @@
 using System;
-using Android;
+using System.Reactive.Linq;
 using Android.App;
 using Android.Content;
-using Android.Runtime;
-using Android.Views;
+using Android.Preferences;
 using Android.Widget;
 using Android.OS;
-using Java.IO;
 using JiraJuggler.Shared;
-using Xamarin.ActionbarSherlockBinding.App;
 
 namespace JiraJuggler
 {
 	[Activity (Label = "JiraJuggler", MainLauncher = true)]
 	public class MainActivity : BaseActivity
 	{
-		int count = 1;
+	    private JiraClient _jiraClient;
 
-		protected override void OnCreate (Bundle bundle)
+	    protected override void OnCreate (Bundle bundle)
 		{
+            
 			base.OnCreate (bundle);
 			SetTitle (Resource.String.app_name);
-
-			// Set our view from the "main" layout resource
+            
 			SetContentView (Resource.Layout.Main);
 
-            //TODO: get all projects in jira:
-            // GET https://jira.trifork.com/rest/api/2/project
+            var preferences = PreferenceManager.GetDefaultSharedPreferences(this);
+		    var jiraUrl = preferences.GetString("JiraUrl", null); 
+            var userName = preferences.GetString("UserName", null); 
+            var password = preferences.GetString("Password", null); 
+		    _jiraClient = new JiraClient(jiraUrl, userName, password);
 
+		    Button button = FindViewById<Button>(Resource.Id.myButton);
+            Spinner spinner = FindViewById<Spinner>(Resource.Id.projectSpinner);
+		    var projectListArrayAdapter = new ProjectListArrayAdapter(this);
+            spinner.Adapter = projectListArrayAdapter;
 
-			// Get our button from the layout resource,
-			// and attach an event to it
-            Button button = FindViewById<Button>(Resource.Id.myButton);
+            var buttonClick = Observable.FromEventPattern(
+                h => button.Click += h,
+                h => button.Click -= h);
 
-            button.Click += delegate
-            {
-                //button.Text = string.Format ("{0} clicks!", 2*count++);
-                button.Text = new JiraClient().PerformRequest();
+		    var projectsAvailable = buttonClick.Select(_ => _jiraClient.GetProjects());
 
-                var imageIntent = new Intent();
-                imageIntent.SetType("image/*");
-                imageIntent.SetAction(Intent.ActionGetContent);
-                StartActivityForResult(Intent.CreateChooser(imageIntent, "Select photo"), 0);
-            };
+		    projectsAvailable
+                .ObserveOn(Application.SynchronizationContext)
+		        .Subscribe(p => RunOnUiThread(() => projectListArrayAdapter.AddAll(p)));
+
+            //intent for picking image from gallery
+            //var imageIntent = new Intent();
+            //imageIntent.SetType("image/*");
+            //imageIntent.SetAction(Intent.ActionGetContent);
+            //StartActivityForResult(Intent.CreateChooser(imageIntent, "Select photo"), 0);
 		}
 
         protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)

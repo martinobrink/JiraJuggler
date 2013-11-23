@@ -43,13 +43,18 @@ namespace JiraJuggler
 	                                   select projects;
 
 		    jiraProjectsReceived
-                .Subscribe(jiraProjects => 
-                    RunOnUiThread(() =>
-		            {
-                        projectListArrayAdapter.Clear();
-		                projectListArrayAdapter.AddAll(jiraProjects);
-		                spinner.SetSelection(0, true);
-		            }));
+                .Subscribe(
+                    jiraProjects => 
+                        RunOnUiThread(() =>
+		                {
+                            projectListArrayAdapter.Clear();
+		                    projectListArrayAdapter.AddAll(jiraProjects);
+		                    spinner.SetSelection(0, true);
+		                }), 
+                    exception => 
+                        RunOnUiThread(() => 
+                            Toast.MakeText(this, "An error occured: '" + exception.Message + "'. Did you forget to set jira configuration under Settings?", ToastLength.Long).Show()
+                    ));
 
             //intent for picking image from gallery
             //var imageIntent = new Intent();

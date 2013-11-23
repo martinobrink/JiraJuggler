@@ -22,6 +22,7 @@ namespace JiraJuggler.Shared
         public async Task<List<ProjectData>> GetProjects()
         {
             var projectsJson = await _client.GetStringAsync("project");
+
             if (String.IsNullOrEmpty(projectsJson))
             {
                 return new List<ProjectData> {new ProjectData {Name = "No Data Received..."}};

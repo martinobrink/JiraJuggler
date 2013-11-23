@@ -16,17 +16,18 @@ namespace JiraJuggler
 
 	    protected override void OnCreate (Bundle bundle)
 		{
-            
 			base.OnCreate (bundle);
 			SetTitle (Resource.String.app_name);
             
 			SetContentView (Resource.Layout.Main);
 
-            var preferences = PreferenceManager.GetDefaultSharedPreferences(this);
+            //TODO: maybe put this in OnResume() so settings are reloaded after returning from SettingsActivity
+            //TODO: Notify user of settings not found or show preferences activity
+		    var preferences = PreferenceManager.GetDefaultSharedPreferences(this);
 		    var jiraUrl = preferences.GetString("JiraUrl", null); 
             var userName = preferences.GetString("UserName", null); 
-            var password = preferences.GetString("Password", null); 
-		    _jiraClient = new JiraClient(jiraUrl, userName, password);
+            var password = preferences.GetString("Password", null);
+            _jiraClient = new JiraClient(jiraUrl, userName, password);
 
 		    Button button = FindViewById<Button>(Resource.Id.myButton);
             Spinner spinner = FindViewById<Spinner>(Resource.Id.projectSpinner);
@@ -37,11 +38,18 @@ namespace JiraJuggler
                 h => button.Click += h,
                 h => button.Click -= h);
 
-		    var projectsAvailable = buttonClick.Select(_ => _jiraClient.GetProjects());
+	        var jiraProjectsReceived = from _ in buttonClick
+	                                   from projects in _jiraClient.GetProjects()
+	                                   select projects;
 
-		    projectsAvailable
-                .ObserveOn(Application.SynchronizationContext)
-		        .Subscribe(p => RunOnUiThread(() => projectListArrayAdapter.AddAll(p)));
+		    jiraProjectsReceived
+                .Subscribe(jiraProjects => 
+                    RunOnUiThread(() =>
+		            {
+                        projectListArrayAdapter.Clear();
+		                projectListArrayAdapter.AddAll(jiraProjects);
+		                spinner.SetSelection(0, true);
+		            }));
 
             //intent for picking image from gallery
             //var imageIntent = new Intent();

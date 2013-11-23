@@ -19,11 +19,15 @@ namespace JiraJuggler.Shared
 	        _client.BaseAddress = new Uri(jiraBaseUrl + "/rest/api/2/");
 	    }
 
-        //TODO: make async
-        public List<ProjectData> GetProjects()
+        public async Task<List<ProjectData>> GetProjects()
         {
-            var projectsJson = _client.GetStringAsync("project").Result;
-            return JsonConvert.DeserializeObject<List<ProjectData>>(projectsJson);
+            var projectsJson = await _client.GetStringAsync("project");
+            if (String.IsNullOrEmpty(projectsJson))
+            {
+                return new List<ProjectData> {new ProjectData {Name = "No Data Received..."}};
+            }
+
+            return await JsonConvert.DeserializeObjectAsync<List<ProjectData>>(projectsJson);
         }
 
         //TODO: not tested yet

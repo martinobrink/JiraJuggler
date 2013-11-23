@@ -1141,7 +1141,7 @@ namespace JiraJuggler
 			public const int app_name = 2131361806;
 			
 			// aapt resource value: 0x7f0a000d
-			public const int hello = 2131361805;
+			public const int button_retrieve_jira_projects = 2131361805;
 			
 			static String()
 			{

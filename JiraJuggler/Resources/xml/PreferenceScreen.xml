@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:enabled="true"
     android:persistent="true"
-    android:title="Settings" >
+    android:title="Settings"
+    android:summary="Please ensure all settings have been set before using the app" >
 
     <EditTextPreference
         android:key="JiraUrl"

@@ -31,17 +31,15 @@ namespace JiraJuggler.Shared
             return await JsonConvert.DeserializeObjectAsync<List<ProjectData>>(projectsJson);
         }
 
-        //TODO: not tested yet
-        public async Task<HttpResponseMessage> UploadImage(string url, byte[] imageData, string fileName)
+        public async Task<HttpResponseMessage> UploadImage(string issueId, byte[] imageData, string fileName)
         {
-            var requestContent = new MultipartFormDataContent();
-            //    here you can specify boundary if you need---^
             var imageContent = new ByteArrayContent(imageData);
             imageContent.Headers.ContentType = MediaTypeHeaderValue.Parse("image/jpeg");
-
-            requestContent.Add(imageContent, "file", fileName);
-
-            return await _client.PostAsync(url, requestContent);
+            var requestContent = new MultipartFormDataContent {{imageContent, "file", fileName}};
+            var request = new HttpRequestMessage(HttpMethod.Post, "issue/"+issueId+"/attachments") { Content = requestContent };
+            request.Headers.Add("X-Atlassian-Token", "nocheck");//required in order to disable XSRF check
+            
+            return await _client.SendAsync(request);
         }
 	}
 }

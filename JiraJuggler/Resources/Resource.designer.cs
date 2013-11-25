@@ -942,6 +942,9 @@ namespace JiraJuggler
 			// aapt resource value: 0x7f05000b
 			public const int abs__up = 2131034123;
 			
+			// aapt resource value: 0x7f050034
+			public const int buttonSelectFile = 2131034164;
+			
 			// aapt resource value: 0x7f050009
 			public const int disableHome = 2131034121;
 			
